@@ -17,7 +17,7 @@ import com.example.filmopo.presentation.signup_screen.SignUpScreen
 @Composable
 fun NavigationGraph(
     navController: NavHostController = rememberNavController(),
-    movieViewModel: MovieViewModel = viewModel()
+    
 ) {
     NavHost(
         navController = navController,
@@ -33,7 +33,7 @@ fun NavigationGraph(
         }
         // Route Homepage Screen
         composable(route = Screens.HomepageScreen.route) {
-            HomepageScreen(movieViewModel = movieViewModel, navController = navController)
+             HomepageScreen(navController)
         }
 
         // Detail screen belum
