@@ -1,88 +1,123 @@
 package com.example.filmopo.presentation.homepage_screen
 
-import android.graphics.Movie
-import android.media.Image
-import androidx.compose.foundation.Image
-import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material.*
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Place
-import androidx.compose.runtime.Composable
-import androidx.compose.runtime.CompositionLocalProvider
+import androidx.compose.runtime.*
+import androidx.compose.runtime.saveable.rememberSaveable
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
-import androidx.compose.ui.graphics.Brush
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.graphics.vector.ImageVector
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.text.TextStyle
-import androidx.compose.ui.tooling.preview.Preview
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import coil.compose.rememberImagePainter
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.filmopo.data.api.MovieData
 import com.example.filmopo.data.api.MovieViewModel
+import com.example.filmopo.navigation.Screens
+import com.example.filmopo.presentation.SearchBar
 import com.example.filmopo.presentation.TopBarApp
 import com.example.filmopo.ui.theme.FILMOPOTheme
+import com.example.filmopo.ui.theme.lightBlue
+import kotlinx.coroutines.launch
 
 @Composable
 fun HomepageScreen(
-    //movieViewModel: MovieViewModel,
+    movieViewModel: MovieViewModel,
     navController: NavController
 ) {
-    //val movieData = MovieData(Title = "", Year = "")
+    //val navController = rememberNavController()
 
-    val viewModel: MovieViewModel = viewModel()
+    //val movieViewModel: MovieViewModel = viewModel()
 
     Scaffold(
         topBar = { TopBarApp(navController = navController) },
-
         content = {
-            Column {
-                LazyColumn(
-                    contentPadding = PaddingValues(
-                        vertical = 8.dp,
-                        horizontal = 8.dp
-                    )
-                ){
-                    itemsIndexed(items = viewModel.state.value) { index, movieData ->
-                        MovieItem(item = movieData)
-                    }
-                }
-//                Spacer(modifier = Modifier.height(15.dp))
-//
-//                viewModel.state.value.forEach { movieData ->
-//                    MovieItem(item = movieData)
-//                }
+            Column(Modifier.padding(8.dp)) {
+                SearchBar(movieViewModel)
+                MovieList(movieViewModel, navController)
             }
         }
     )
 }
 
 @Composable
-fun MovieItem(item: MovieData) {
+fun MovieList(movieViewModel: MovieViewModel, navController: NavController) {
+    LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
+        itemsIndexed(items = movieViewModel.state.value) { index, movieData ->
+            MovieItem(item = movieData, navController = navController)
+        }
+    }
+}
+
+@Composable
+fun SearchBar(movieViewModel: MovieViewModel) {
+    var cari by rememberSaveable { mutableStateOf("") }
+    val scope = rememberCoroutineScope()
+    val context = LocalContext.current
+
+    Row(verticalAlignment = Alignment.CenterVertically, modifier = Modifier.padding(5.dp)) {
+        TextField(
+            value = cari,
+            onValueChange = { cari = it },
+            modifier = Modifier.fillMaxWidth().weight(0.3f),
+            colors = TextFieldDefaults.textFieldColors(
+                cursorColor = Color.Black,
+                disabledLabelColor = lightBlue,
+                unfocusedIndicatorColor = Color.Transparent,
+                focusedIndicatorColor = Color.Transparent
+            ),
+            shape = RoundedCornerShape(8.dp),
+            singleLine = true,
+            placeholder = { Text(text = "Search Title Movie...") }
+        )
+
+        Button(
+            onClick = {
+                scope.launch {
+                    movieViewModel.searchMovies(cari, context)
+                }            },
+            modifier = Modifier.wrapContentSize(),
+            colors = ButtonDefaults.buttonColors(
+                backgroundColor = Color.Blue,
+                contentColor = Color.White
+            ),
+            shape = RoundedCornerShape(8.dp)
+        ) {
+            Text(text = "Cari", color = Color.White, modifier = Modifier.padding(3.dp))
+        }
+    }
+}
+
+@Composable
+fun MovieItem(item: MovieData, navController: NavController) {
     Card(
         elevation = 4.dp,
-        modifier = Modifier.padding(8.dp)
+        modifier = Modifier
+            .padding(8.dp)
+            .clickable {
+                navController.navigate("${Screens.DetailScreen.route}/${item.imdbID}")
+            }
     ) {
         Row(
             verticalAlignment = Alignment.CenterVertically,
             modifier = Modifier.padding(8.dp)
         ) {
             MoviePoster(item.Poster, Modifier.weight(0.40f))
-            MovieDetails(item.Title, item.Year, Modifier.weight(0.60f))
+            MovieDetails(item.Title, item.Year, Modifier.weight(0.60f), navController)
         }
     }
 }
+
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
@@ -96,7 +131,7 @@ private fun MoviePoster(poster: String, modifier: Modifier) {
 }
 
 @Composable
-private fun MovieDetails(title: String, year: String, modifier: Modifier) {
+private fun MovieDetails(title: String, year: String, modifier: Modifier, navController: NavController) {
     Column(modifier = modifier) {
         Text(
             text = title,
@@ -113,53 +148,7 @@ private fun MovieDetails(title: String, year: String, modifier: Modifier) {
     }
 }
 
-//@Composable
-//fun DetailCard(data: MovieData, movieViewModel: MovieViewModel) {
-//    Card(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//            .padding(10.dp)
-//            .clickable {
-//                movieViewModel.getDetailMovie(data.imdbID)
-//               // navController.navigate("DetailScreen/${data.imdbID}")
-//            },
-//        shape = RoundedCornerShape(15.dp),
-//        elevation = 5.dp,
-//    ) {
-//        Box(
-//            modifier = Modifier
-//                .height(200.dp)
-//        ) {
-//            Card(
-//                modifier = Modifier
-//                    .fillMaxWidth()
-//            ) {
-//                Image(
-//                    painter = rememberImagePainter(data.Poster),
-//                    contentDescription = data.Title,
-//                    contentScale = ContentScale.FillWidth
-//                )
-//            }
-//            Box(modifier = Modifier
-//                .fillMaxSize()
-//                .background(
-//                    Brush.verticalGradient(
-//                        listOf(
-//                            Color.Transparent,
-//                            Color.Black
-//                        ),
-//                        startY = 400f
-//                    )
-//                )
-//            )
-//            Box(modifier = Modifier
-//                .fillMaxSize()
-//                .padding(12.dp),
-//                contentAlignment = Alignment.BottomStart
-//            ) {
-//                Text(text = data.Title,style = TextStyle(color = Color.White, fontSize = 16.sp))
-//            }
-//        }
-//    }
-//}
+
+
+
 
