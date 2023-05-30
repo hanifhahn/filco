@@ -7,5 +7,5 @@ data class MovieData(
     val Title: String,
     val Year: String,
     val Poster: String,
-    //val imdbID:Int,
+    val imdbID:String,
 )
