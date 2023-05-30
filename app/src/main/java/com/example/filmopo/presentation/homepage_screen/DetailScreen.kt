@@ -1,87 +1,83 @@
 package com.example.filmopo.presentation.homepage_screen
-//
-//import androidx.compose.foundation.Image
-//import androidx.compose.foundation.layout.*
-//import androidx.compose.material.Divider
-//import androidx.compose.material.Text
-//import androidx.compose.runtime.Composable
-//import androidx.compose.ui.Modifier
-//import androidx.compose.ui.res.stringResource
-//import androidx.compose.ui.text.TextStyle
-//import androidx.compose.ui.unit.dp
-//import androidx.compose.ui.unit.sp
-//import coil.compose.rememberImagePainter
-//import com.example.filmopo.data.api.Movie
-//import com.example.filmopo.data.api.MovieViewModel
-//import com.example.filmopo.R
-//
-//@Composable
-fun DetailScreen() {
-//    model.getDetailMovie(imdbID = id)
-//    val data: Movie = model.movie!!
-//
-//    Column(
-//        modifier = Modifier
-//            .fillMaxSize()
-//            .padding(20.dp)
-//    ) {
-//        Row(
-//            modifier = Modifier
-//                .fillMaxWidth()
-//                .height(300.dp)
-//                .padding(top = 20.dp),
-//            horizontalArrangement = Arrangement.Center
-//        ) {
-//            Image(painter = rememberImagePainter(data.Poster), contentDescription = null)
-//        }
-//
-//        Divider(
-//            color = androidx.compose.ui.graphics.Color.LightGray,
-//            thickness = 2.dp,
-//            modifier = Modifier.padding(vertical = 20.dp)
-//        )
-//        TextRow(jenisnya = stringResource(R.string.detailjudul), isinya = ": ${data.Title}")
-//        TextRow(jenisnya = stringResource(R.string.detailrilis), isinya = ": ${data.Released}")
-//        TextRow(jenisnya = stringResource(R.string.detailpopularitas), isinya = ": ${data.Rated}")
-//        Divider(
-//            color = androidx.compose.ui.graphics.Color.LightGray,
-//            thickness = 1.dp,
-//            modifier = Modifier.padding(vertical = 20.dp)
-//        )
-//        Text(
-//            text = stringResource(R.string.detailsinopsis),
-//            style = TextStyle(
-//                fontSize = 30.sp
-//            )
-//        )
-//        Spacer(modifier = Modifier.padding(10.dp))
-//        Text(text = data.Plot)
-//        Divider(
-//            color = androidx.compose.ui.graphics.Color.LightGray,
-//            thickness = 1.dp,
-//            modifier = Modifier.padding(vertical = 20.dp)
-//        )
-//    }
+
+import androidx.compose.foundation.Image
+import androidx.compose.foundation.layout.*
+import androidx.compose.foundation.lazy.LazyColumn
+import androidx.compose.foundation.lazy.itemsIndexed
+import androidx.compose.material.*
+import androidx.compose.runtime.*
+import androidx.compose.ui.Alignment
+import androidx.compose.ui.Modifier
+import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.layout.ContentScale
+import androidx.compose.ui.semantics.Role.Companion.Image
+import androidx.compose.ui.unit.dp
+import androidx.lifecycle.viewModelScope
+import coil.compose.rememberImagePainter
+import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
+import com.bumptech.glide.integration.compose.GlideImage
+import com.example.filmopo.data.api.MovieData
+import com.example.filmopo.data.api.MovieDetailData
+import com.example.filmopo.data.api.MovieViewModel
+import kotlinx.coroutines.*
+
+
+@Composable
+fun DetailScreen(
+    movieId: String,
+    movieViewModel: MovieViewModel,
+) {
+    var movieData by remember { mutableStateOf<MovieDetailData?>(null) }
+
+    LaunchedEffect(movieId) {
+        val data = withContext(Dispatchers.IO) {
+            movieViewModel.getMovieById(movieId)
+        }
+        movieData = data
+    }
+
+    Column(
+        modifier = Modifier
+            .fillMaxSize()
+            .padding(20.dp),
+        verticalArrangement = Arrangement.spacedBy(8.dp)
+    ) {
+        if (movieData != null) {
+            movieData?.let {
+                MoviePoster(it.Poster, Modifier.weight(0.40f))
+                Text(
+                    text = it.Title,
+                    style = MaterialTheme.typography.h6
+                )
+                Text(
+                    text = it.Year,
+                    style = MaterialTheme.typography.body2
+                )
+                Text(
+                    text = "Released: ${it.Released}",
+                    style = MaterialTheme.typography.body2
+                )
+            }
+        } else {
+            LaunchedEffect(Unit) {
+                // Delay the display of "Movie Not Found" text for a short duration
+                delay(1000)
+                movieData = MovieDetailData("", "", "", "") // Set empty data to hide the text
+            }
+
+        }
+    }
 }
-//
-//
-//@Composable
-//fun TextRow(jenisnya: String, isinya: String) {
-//    Row(
-//        modifier = Modifier
-//            .fillMaxWidth()
-//    ) {
-//        Row(
-//            modifier = Modifier
-//                .weight(1.0f)
-//        ) {
-//            Text(text = jenisnya)
-//        }
-//        Row(
-//            modifier = Modifier
-//                .weight(2.0f)
-//        ) {
-//            Text(text = isinya)
-//        }
-//    }
-//}
+
+
+@OptIn(ExperimentalGlideComposeApi::class)
+@Composable
+private fun MoviePoster(poster: String, modifier: Modifier) {
+    GlideImage(
+        model = poster,
+        contentDescription = "Movie poster",
+        modifier = modifier.padding(8.dp),
+        contentScale = ContentScale.FillBounds
+    )
+}
+
