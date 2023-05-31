@@ -52,7 +52,6 @@ fun DetailScreen(
                 )
                 Button(
                     onClick = {
-//                        val film = MovieDetailData("The Avengers", "2012", "https://m.media-amazon.com/images/M/MV5BNDYxNjQyMjAtNTdiOS00NGYwLWFmNTAtNThmYjU5ZGI2YTI1XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg", "04 May 2012")
                         MovieByUser.createMovie(movieData)
                     },
                     colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green),
@@ -68,7 +67,7 @@ fun DetailScreen(
             LaunchedEffect(Unit) {
                 // Delay the display of "Movie Not Found" text for a short duration
                 delay(1000)
-                movieData = MovieDetailData("", "", "", "") // Set empty data to hide the text
+                movieData = MovieDetailData("", "", "", "", "") // Set empty data to hide the text
             }
 
         }
