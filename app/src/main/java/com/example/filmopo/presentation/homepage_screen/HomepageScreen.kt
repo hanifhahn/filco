@@ -13,6 +13,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
+import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.lifecycle.viewmodel.compose.viewModel
@@ -24,7 +25,6 @@ import com.bumptech.glide.integration.compose.GlideImage
 import com.example.filmopo.data.api.MovieData
 import com.example.filmopo.data.api.MovieViewModel
 import com.example.filmopo.navigation.Screens
-import com.example.filmopo.presentation.SearchBar
 import com.example.filmopo.presentation.TopBarApp
 import com.example.filmopo.ui.theme.FILMOPOTheme
 import com.example.filmopo.ui.theme.lightBlue
@@ -69,7 +69,10 @@ fun SearchBar(movieViewModel: MovieViewModel) {
         TextField(
             value = cari,
             onValueChange = { cari = it },
-            modifier = Modifier.fillMaxWidth().weight(0.3f),
+            modifier = Modifier
+                .fillMaxWidth().weight(0.3f)
+                .padding(end = 8.dp)
+            ,
             colors = TextFieldDefaults.textFieldColors(
                 cursorColor = Color.Black,
                 disabledLabelColor = lightBlue,
