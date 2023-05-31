@@ -7,6 +7,6 @@ data class MovieDetailData(
     val Title: String,
     val Year: String,
     val Poster: String,
-    val Released:String,
+    val Released:String
 )
 

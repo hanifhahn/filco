@@ -1,26 +1,19 @@
 package com.example.filmopo.presentation.homepage_screen
 
-import androidx.compose.foundation.Image
+import android.util.Log
 import androidx.compose.foundation.layout.*
-import androidx.compose.foundation.lazy.LazyColumn
-import androidx.compose.foundation.lazy.itemsIndexed
 import androidx.compose.material.*
 import androidx.compose.runtime.*
-import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
-import androidx.compose.ui.semantics.Role.Companion.Image
 import androidx.compose.ui.unit.dp
-import androidx.lifecycle.viewModelScope
-import coil.compose.rememberImagePainter
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
-import com.example.filmopo.data.api.MovieData
 import com.example.filmopo.data.api.MovieDetailData
 import com.example.filmopo.data.api.MovieViewModel
+import com.example.filmopo.data.movie_by_user.MovieByUser
 import kotlinx.coroutines.*
-
 
 @Composable
 fun DetailScreen(
@@ -57,6 +50,19 @@ fun DetailScreen(
                     text = "Released: ${it.Released}",
                     style = MaterialTheme.typography.body2
                 )
+                Button(
+                    onClick = {
+//                        val film = MovieDetailData("The Avengers", "2012", "https://m.media-amazon.com/images/M/MV5BNDYxNjQyMjAtNTdiOS00NGYwLWFmNTAtNThmYjU5ZGI2YTI1XkEyXkFqcGdeQXVyMTMxODk2OTU@._V1_SX300.jpg", "04 May 2012")
+                        MovieByUser.createMovie(movieData)
+                    },
+                    colors = ButtonDefaults.buttonColors(backgroundColor = Color.Green),
+                    modifier = Modifier
+                        .fillMaxWidth()
+                        .padding(16.dp)
+                ) {
+                    Text("Add Movie")
+                    Log.d("Hasil List Detail Movie", movieData.toString())
+                }
             }
         } else {
             LaunchedEffect(Unit) {
@@ -67,6 +73,7 @@ fun DetailScreen(
 
         }
     }
+
 }
 
 
