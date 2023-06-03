@@ -13,20 +13,15 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.layout.ContentScale
 import androidx.compose.ui.platform.LocalContext
-import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
-import androidx.lifecycle.viewmodel.compose.viewModel
 import androidx.navigation.NavController
-import androidx.navigation.compose.rememberNavController
-import coil.compose.rememberImagePainter
 import com.bumptech.glide.integration.compose.ExperimentalGlideComposeApi
 import com.bumptech.glide.integration.compose.GlideImage
 import com.example.filmopo.data.api.MovieData
 import com.example.filmopo.data.api.MovieViewModel
 import com.example.filmopo.navigation.Screens
+import com.example.filmopo.presentation.BottomBarApp
 import com.example.filmopo.presentation.TopBarApp
-import com.example.filmopo.ui.theme.FILMOPOTheme
 import com.example.filmopo.ui.theme.lightBlue
 import kotlinx.coroutines.launch
 
@@ -35,10 +30,6 @@ fun HomepageScreen(
     movieViewModel: MovieViewModel,
     navController: NavController
 ) {
-    //val navController = rememberNavController()
-
-    //val movieViewModel: MovieViewModel = viewModel()
-
     Scaffold(
         topBar = { TopBarApp(navController = navController) },
         content = {
@@ -46,17 +37,9 @@ fun HomepageScreen(
                 SearchBar(movieViewModel)
                 MovieList(movieViewModel, navController)
             }
-        }
+        },
+        bottomBar = { BottomBarApp(navController = navController) }
     )
-}
-
-@Composable
-fun MovieList(movieViewModel: MovieViewModel, navController: NavController) {
-    LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
-        itemsIndexed(items = movieViewModel.state.value) { index, movieData ->
-            MovieItem(item = movieData, navController = navController)
-        }
-    }
 }
 
 @Composable
@@ -70,9 +53,9 @@ fun SearchBar(movieViewModel: MovieViewModel) {
             value = cari,
             onValueChange = { cari = it },
             modifier = Modifier
-                .fillMaxWidth().weight(0.3f)
-                .padding(end = 8.dp)
-            ,
+                .fillMaxWidth()
+                .weight(0.3f)
+                .padding(end = 8.dp),
             colors = TextFieldDefaults.textFieldColors(
                 cursorColor = Color.Black,
                 disabledLabelColor = lightBlue,
@@ -88,7 +71,8 @@ fun SearchBar(movieViewModel: MovieViewModel) {
             onClick = {
                 scope.launch {
                     movieViewModel.searchMovies(cari, context)
-                }            },
+                }
+            },
             modifier = Modifier.wrapContentSize(),
             colors = ButtonDefaults.buttonColors(
                 backgroundColor = Color.Blue,
@@ -97,6 +81,15 @@ fun SearchBar(movieViewModel: MovieViewModel) {
             shape = RoundedCornerShape(8.dp)
         ) {
             Text(text = "Cari", color = Color.White, modifier = Modifier.padding(3.dp))
+        }
+    }
+}
+
+@Composable
+fun MovieList(movieViewModel: MovieViewModel, navController: NavController) {
+    LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
+        itemsIndexed(items = movieViewModel.state.value) { index, movieData ->
+            MovieItem(item = movieData, navController = navController)
         }
     }
 }
@@ -125,7 +118,7 @@ fun MovieItem(item: MovieData, navController: NavController) {
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable
 private fun MoviePoster(poster: String, modifier: Modifier) {
-     GlideImage(
+    GlideImage(
         model = poster,
         contentDescription = "Movie poster",
         modifier = modifier.padding(8.dp),
@@ -134,7 +127,12 @@ private fun MoviePoster(poster: String, modifier: Modifier) {
 }
 
 @Composable
-private fun MovieDetails(title: String, year: String, modifier: Modifier, navController: NavController) {
+private fun MovieDetails(
+    title: String,
+    year: String,
+    modifier: Modifier,
+    navController: NavController
+) {
     Column(modifier = modifier) {
         Text(
             text = title,
