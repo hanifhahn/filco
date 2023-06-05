@@ -2,6 +2,8 @@ package com.example.filmopo.presentation.savedmovie_screen
 
 import androidx.compose.foundation.layout.*
 import androidx.compose.material.*
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Delete
 import androidx.compose.runtime.*
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -12,6 +14,7 @@ import androidx.navigation.NavController
 import com.example.filmopo.R
 import com.example.filmopo.data.api.MovieDetailData
 import com.example.filmopo.data.api.MovieViewModel
+import com.example.filmopo.data.movie_by_user.MovieByUser
 import com.example.filmopo.data.movie_by_user.MovieByUser.retrieveMovies
 
 @Composable
@@ -72,12 +75,22 @@ fun MovieListScreen() {
 fun MovieItem(movie: MovieDetailData) {
     Card(
         modifier = Modifier.fillMaxWidth(),
-        elevation = 4.dp,
-        content = {
-            Column(modifier = Modifier.padding(16.dp)) {
+        elevation = 4.dp
+    ) {
+        Row(Modifier.fillMaxWidth().padding(16.dp)) {
+            Column(Modifier.weight(1f)) {
                 Text(text = movie.Title, style = MaterialTheme.typography.h6)
                 Text(text = movie.Year, style = MaterialTheme.typography.body1)
             }
+
+            IconButton(
+                onClick = {
+                    MovieByUser.deleteMovies(movie.imdbID)
+                },
+                modifier = Modifier.align(Alignment.CenterVertically)
+            ) {
+                Icon(Icons.Filled.Delete, tint = Color.Red, contentDescription = "Delete")
+            }
         }
-    )
+    }
 }
