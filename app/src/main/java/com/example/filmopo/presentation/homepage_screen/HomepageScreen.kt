@@ -88,7 +88,7 @@ fun SearchBar(movieViewModel: MovieViewModel) {
 @Composable
 fun MovieList(movieViewModel: MovieViewModel, navController: NavController) {
     LazyColumn(contentPadding = PaddingValues(vertical = 8.dp, horizontal = 8.dp)) {
-        itemsIndexed(items = movieViewModel.state.value) { index, movieData ->
+        itemsIndexed(items = movieViewModel.state.value) { _, movieData ->
             MovieItem(item = movieData, navController = navController)
         }
     }
@@ -113,7 +113,6 @@ fun MovieItem(item: MovieData, navController: NavController) {
         }
     }
 }
-
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable

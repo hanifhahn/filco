@@ -66,15 +66,13 @@ fun DetailScreen(
         } else {
             LaunchedEffect(Unit) {
                 // Delay the display of "Movie Not Found" text for a short duration
-                delay(1000)
+                delay(50)
                 movieData = MovieDetailData("", "", "", "", "") // Set empty data to hide the text
             }
-
         }
     }
 
 }
-
 
 @OptIn(ExperimentalGlideComposeApi::class)
 @Composable

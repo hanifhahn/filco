@@ -5,10 +5,8 @@ import android.util.Log
 import android.widget.Toast
 import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.*
-import com.google.firebase.database.DataSnapshot
-import com.google.firebase.database.DatabaseError
+import com.example.filmopo.data.Constant
 import com.google.firebase.database.FirebaseDatabase
-import com.google.firebase.database.ValueEventListener
 import kotlinx.coroutines.CompletableDeferred
 import retrofit2.Call
 import retrofit2.Callback
@@ -20,7 +18,6 @@ class MovieViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
     private val restInterface: ApiService
     val state = mutableStateOf(emptyList<MovieData>())
 
-    private val database = FirebaseDatabase.getInstance().getReference("MovieByUser")
     private val readDataFromFirebase = MutableLiveData<List<MovieData>>()
     val data: LiveData<List<MovieData>> get() = readDataFromFirebase
 
@@ -33,27 +30,8 @@ class MovieViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
         getListMovie("s")
     }
 
-    fun fetchData() {
-        database.addValueEventListener(object : ValueEventListener {
-            override fun onDataChange(snapshot: DataSnapshot) {
-                val dataList = mutableListOf<MovieData>()
-                for (childSnapshot in snapshot.children) {
-                    val dataItem = childSnapshot.getValue(MovieData::class.java)
-                    dataItem?.let {
-                        dataList.add(it)
-                    }
-                }
-                readDataFromFirebase.value = dataList
-            }
-
-            override fun onCancelled(error: DatabaseError) {
-                Log.d("fetchData : ", error.toString())
-            }
-        })
-    }
-
     private fun getListMovie(query: String) {
-        val call = restInterface.getMovies(query, "51f05115")
+        val call = restInterface.getMovies(query, Constant.OMDB_API_KEY)
         call.enqueue(object : Callback<SearchData> {
             override fun onResponse(call: Call<SearchData>, response: Response<SearchData>) {
                 if (response.isSuccessful) {
@@ -73,7 +51,7 @@ class MovieViewModel(private val stateHandle: SavedStateHandle) : ViewModel() {
     }
 
     fun searchMovies(query: String, applicationContext: Context) {
-        val call = restInterface.getMovies(query, "51f05115")
+        val call = restInterface.getMovies(query, Constant.OMDB_API_KEY)
         call.enqueue(object : Callback<SearchData> {
             override fun onResponse(call: Call<SearchData>, response: Response<SearchData>) {
                 val searchData = response.body()

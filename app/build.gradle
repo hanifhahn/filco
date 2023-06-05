@@ -110,9 +110,9 @@ dependencies {
     implementation("androidx.cardview:cardview:1.0.0")
     implementation("androidx.recyclerview:recyclerview:1.2.1")
     implementation("androidx.recyclerview:recyclerview-selection:1.1.0")
-    implementation "com.github.bumptech.glide:glide:4.12.0"
+    implementation "com.github.bumptech.glide:glide:4.14.2"
     implementation 'com.github.bumptech.glide:compose:1.0.0-alpha.1'
-    annotationProcessor 'com.github.bumptech.glide:compiler:4.12.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.13.0'
 
     implementation "androidx.compose.runtime:runtime-livedata:$compose_ui_version"
     implementation "androidx.compose.runtime:runtime-rxjava2:$compose_ui_version"
