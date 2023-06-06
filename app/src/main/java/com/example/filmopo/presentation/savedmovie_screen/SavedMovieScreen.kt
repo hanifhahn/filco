@@ -10,6 +10,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.stringResource
 import androidx.compose.ui.unit.dp
+import androidx.compose.ui.unit.sp
 import androidx.navigation.NavController
 import com.example.filmopo.R
 import com.example.filmopo.data.api.MovieDetailData
@@ -32,8 +33,9 @@ fun SavedMovieScreen(
                 ) {
                     Text(
                         text = stringResource(R.string.app_name),
-                        modifier = Modifier.padding(start = 8.dp),
-                        color = Color.White
+                        modifier = Modifier.padding(start = 14.dp),
+                        color = Color.White,
+                        fontSize = 20.sp,
                     )
                     Text(
                         text = "Saved Movie",
