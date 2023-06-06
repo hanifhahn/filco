@@ -5,5 +5,8 @@ data class MovieDetailData(
     var Title: String = "",
     var Year: String = "",
     var Poster: String = "",
-    var Released:String = ""
-)
+    var Released:String = "",
+    var Rated:String = "",
+    var Plot:String = "",
+
+    )
