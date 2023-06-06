@@ -16,8 +16,10 @@ import com.example.filmopo.data.api.MovieViewModel
 import com.example.filmopo.presentation.homepage_screen.DetailScreen
 import com.example.filmopo.presentation.homepage_screen.HomepageScreen
 import com.example.filmopo.presentation.login_screen.SignInScreen
+import com.example.filmopo.presentation.onboarding_screen.OnBoardingFirst
 import com.example.filmopo.presentation.savedmovie_screen.SavedMovieScreen
 import com.example.filmopo.presentation.signup_screen.SignUpScreen
+import com.example.filmopo.presentation.splash_screen.SplashScreen
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -30,8 +32,18 @@ fun NavigationGraph(
 ) {
     NavHost(
         navController = navController,
-        startDestination = Screens.SignInScreen.route
+        startDestination = Screens.SplashScreen.route
     ) {
+        // Route SplashScreen
+        composable(route = Screens.SplashScreen.route) {
+            SplashScreen(navController)
+        }
+
+        // Route OnBoarding 1
+        composable(route = Screens.OnBoardingFirst.route) {
+            OnBoardingFirst(navController)
+        }
+
         // Route Sign In
         composable(route = Screens.SignInScreen.route) {
             SignInScreen(navController)
