@@ -11,6 +11,8 @@ import androidx.compose.ui.res.stringResource
 import androidx.navigation.NavController
 import com.example.filmopo.R
 import com.example.filmopo.navigation.Screens
+import com.example.filmopo.ui.theme.brightRed
+import com.example.filmopo.ui.theme.lightBlue
 import com.google.firebase.auth.ktx.auth
 import com.google.firebase.ktx.Firebase
 
@@ -29,10 +31,10 @@ fun TopBarApp(
                     navController.navigate(Screens.SignInScreen.route)
                     Toast.makeText(context, "Logout Success", Toast.LENGTH_LONG).show()
                 },
-                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Red)
+                colors = ButtonDefaults.buttonColors(backgroundColor = Color.Blue)
             )
             {
-                Text(text = "Logout")
+                Text(text = "Logout", color = Color.White)
             }
 //            IconButton(
 //                onClick = {
