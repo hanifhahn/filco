@@ -15,6 +15,7 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.PasswordVisualTransformation
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
@@ -103,7 +104,8 @@ fun SignInScreen(
                 focusedIndicatorColor = Color.Transparent
             ), shape = RoundedCornerShape(8.dp), singleLine = true, placeholder = {
                 Text(text = "Password")
-            }
+            },
+            visualTransformation = PasswordVisualTransformation()
         )
         Button(
             onClick = {
